@@ -5,6 +5,25 @@ capítulo 2
 -entrenamiento individual
 cuando hay 1, 2, ... , 10 personas
 
+
+mover flecha
+
+# Verificar si se hace clic en la punta o el extremo de la punta
+                tip_distance = pygame.math.Vector2(event.pos[0] - arrow_end[0], event.pos[1] - arrow_end[1]).length()
+                if tip_distance <= arrow_length / 3:
+                    arrow_tip_dragging = True
+                elif tip_distance <= arrow_length and tip_distance >= arrow_length - 10:
+                    arrow_tip_dragging = True
+
+                # Iniciar el arrastre de la flecha solo si se hace clic en la punta o el extremo
+                if arrow_tip_dragging:
+                    arrow_dragging = True
+
+
+
+
+
+
 import pygame
 import sys
 
