@@ -1,3 +1,4 @@
+intento 3
 import pygame
 import sys
 
@@ -14,24 +15,42 @@ pygame.display.set_caption("Fútbol Sala")
 white = (255, 255, 255)
 blue = (0, 0, 255)
 red = (255, 0, 0)
+black = (0, 0, 0)
 
 # Jugadores
-player_radius = 20
+player_size = 40
 team1_color = blue
 team2_color = red
 players = []
 
-# Función para crear un jugador
-def create_player(x, y, color):
+# Balón
+ball_radius = 10
+ball_color = black
+ball = {
+    "pos": [screen_width // 2, screen_height // 2],
+    "velocity": [0, 0]
+}
+
+# Función para crear un jugador cuadrado
+def create_square_player(x, y, color):
     return {
-        "rect": pygame.Rect(x, y, player_radius * 2, player_radius * 2),
-        "color": color
+        "rect": pygame.Rect(x, y, player_size, player_size),
+        "color": color,
+        "shape": "square"
+    }
+
+# Función para crear un jugador triángulo
+def create_triangle_player(x, y, color):
+    return {
+        "pos": [x, y],
+        "color": color,
+        "shape": "triangle"
     }
 
 # Crear jugadores
 for i in range(5):
-    players.append(create_player(100, 100 + i * 50, team1_color))
-    players.append(create_player(600, 100 + i * 50, team2_color))
+    players.append(create_square_player(100, 100 + i * 80, team1_color))
+    players.append(create_triangle_player(600, 100 + i * 80, team2_color))
 
 # Bucle principal del juego
 selected_player = None
@@ -44,16 +63,28 @@ while running:
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
                 for player in players:
-                    if player["rect"].collidepoint(event.pos):
+                    if player["shape"] == "square" and player["rect"].collidepoint(event.pos):
                         selected_player = player
                         dragging = True
+                    elif player["shape"] == "triangle":
+                        distance = pygame.math.Vector2(player["pos"][0] - event.pos[0], player["pos"][1] - event.pos[1]).length()
+                        if distance <= player_size:
+                            selected_player = player
+                            dragging = True
         elif event.type == pygame.MOUSEBUTTONUP:
             if event.button == 1:
                 dragging = False
                 selected_player = None
 
     if dragging and selected_player is not None:
-        selected_player["rect"].center = pygame.mouse.get_pos()
+        if selected_player["shape"] == "square":
+            selected_player["rect"].center = pygame.mouse.get_pos()
+        elif selected_player["shape"] == "triangle":
+            selected_player["pos"] = list(pygame.mouse.get_pos())
+
+    # Actualizar la posición del balón
+    ball["pos"][0] += ball["velocity"][0]
+    ball["pos"][1] += ball["velocity"][1]
 
     # Dibujar el campo y los arcos
     screen.fill(white)
@@ -63,9 +94,20 @@ while running:
     pygame.draw.arc(screen, white, (50, (screen_height / 2) - 50, 100, 100), 0, 3.14, 2)
     pygame.draw.arc(screen, white, (screen_width - 150, (screen_height / 2) - 50, 100, 100), 0, 3.14, 2)
 
+    # Dibujar el balón
+    pygame.draw.circle(screen, ball_color, (int(ball["pos"][0]), int(ball["pos"][1])), ball_radius)
+
     # Dibujar jugadores
     for player in players:
-        pygame.draw.rect(screen, player["color"], player["rect"])
+        if player["shape"] == "square":
+            pygame.draw.rect(screen, player["color"], player["rect"])
+        elif player["shape"] == "triangle":
+            x, y = player["pos"]
+            pygame.draw.polygon(screen, player["color"], [
+                (x, y - player_size),
+                (x - player_size / 2, y + player_size / 2),
+                (x + player_size / 2, y + player_size / 2)
+            ])
 
     pygame.display.flip()
 
