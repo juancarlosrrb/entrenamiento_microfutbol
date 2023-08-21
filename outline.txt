@@ -6,6 +6,14 @@ capítulo 2
 cuando hay 1, 2, ... , 10 personas
 
 
+# Dibujar las líneas anteriores
+    for line, color, thickness in lines:
+        pygame.draw.lines(screen, color, False, line, thickness)
+
+    # Dibujar la línea actual si se está dibujando
+    if drawing:
+        pygame.draw.lines(screen, current_color, False, current_line, line_thickness)
+
 mover flecha
 
 # Verificar si se hace clic en la punta o el extremo de la punta
