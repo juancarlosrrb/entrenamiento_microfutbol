@@ -1,1 +1,64 @@
 Entrenamiento colectivo defensivo
+
+import pygame
+import sys
+
+# Inicializar Pygame
+pygame.init()
+
+# Dimensiones de la ventana
+ancho = 800
+alto = 400
+
+# Colores
+blanco = (255, 255, 255)
+verde = (0, 255, 0)
+rojo = (255, 0, 0)
+azul = (0, 0, 255)
+
+# Crear la ventana
+ventana = pygame.display.set_mode((ancho, alto))
+pygame.display.set_caption("Visualización de Jugadores y Balón")
+
+# Posiciones iniciales de jugadores y balón
+jugadores_equipo1 = [(50, alto // 2 - 50), (50, alto // 2 + 50),
+                     (150, alto // 2 - 50), (150, alto // 2 + 50),
+                     (250, alto // 2)]
+jugadores_equipo2 = [(ancho - 50, alto // 2 - 50), (ancho - 50, alto // 2 + 50),
+                     (ancho - 150, alto // 2 - 50), (ancho - 150, alto // 2 + 50),
+                     (ancho - 250, alto // 2)]
+balon = [ancho // 2, alto // 2]
+
+# Función para dibujar jugadores y balón
+def dibujar_jugador(x, y, forma, color):
+    if forma == "triangulo":
+        pygame.draw.polygon(ventana, color, [(x, y - 20), (x - 20, y + 20), (x + 20, y + 20)])
+    elif forma == "cuadrado":
+        pygame.draw.rect(ventana, color, (x - 15, y - 15, 30, 30))
+
+def dibujar_balon(x, y):
+    pygame.draw.circle(ventana, rojo, (x, y), 10)
+
+# Bucle principal del juego
+ejecutando = True
+while ejecutando:
+    for evento in pygame.event.get():
+        if evento.type == pygame.QUIT:
+            ejecutando = False
+
+    # Limpiar la pantalla
+    ventana.fill(blanco)
+
+    # Dibujar jugadores y balón
+    for jugador in jugadores_equipo1:
+        dibujar_jugador(jugador[0], jugador[1], "triangulo", verde)
+    for jugador in jugadores_equipo2:
+        dibujar_jugador(jugador[0], jugador[1], "cuadrado", azul)
+    dibujar_balon(balon[0], balon[1])
+
+    # Actualizar la ventana
+    pygame.display.update()
+
+# Salir del juego
+pygame.quit()
+sys.exit()
