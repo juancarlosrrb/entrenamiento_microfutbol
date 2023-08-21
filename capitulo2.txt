@@ -1,5 +1,6 @@
 import pygame
 import sys
+import math
 
 # Inicializar Pygame
 pygame.init()
@@ -90,10 +91,7 @@ while running:
 
     # Líneas del campo
     pygame.draw.rect(screen, white, (50, 50, screen_width - 100, screen_height - 100), 2)
-    pygame.draw.line(screen, white, (50, screen_height // 2), (screen_width // 2 - 75, screen_height // 2), 2)
-    pygame.draw.line(screen, white, (screen_width // 2 + 75, screen_height // 2), (screen_width - 50, screen_height // 2), 2)
-
-    # Arcos
+    pygame.draw.lines(screen, white, False, [(screen_width // 2, 50), (screen_width // 2, screen_height - 50)], 2)
     pygame.draw.arc(screen, white, (50, (screen_height // 2) - 50, 100, 100), 0, math.pi, 2)
     pygame.draw.arc(screen, white, (screen_width - 150, (screen_height // 2) - 50, 100, 100), 0, math.pi, 2)
 
