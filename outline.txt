@@ -1,7 +1,90 @@
-�ndice
-cap�tulo 1
+índice
+capítulo 1
 -Calentamiento
-cap�tulo 2
+capítulo 2
 -entrenamiento individual
 cuando hay 1, 2, ... , 10 personas
+
+import pygame
+import sys
+
+# Inicializar Pygame
+pygame.init()
+
+# Configuración de la pantalla
+screen_width = 800
+screen_height = 600
+screen = pygame.display.set_mode((screen_width, screen_height))
+pygame.display.set_caption("Cancha de Fútbol Sala")
+
+# Colores
+white = (255, 255, 255)
+black = (0, 0, 0)  # Color de las líneas
+red = (255, 0, 0)  # Color del balón
+
+# Bucle principal del juego
+running = True
+dragging_player = None
+dragging_ball = False
+ball_radius = 10
+ball_position = [screen_width // 2, screen_height // 2]
+
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            if event.button == 1:
+                for player in players:
+                    if player["shape"] == "square" and player["rect"].collidepoint(event.pos):
+                        dragging_player = player
+                    elif player["shape"] == "triangle":
+                        distance = pygame.math.Vector2(player["pos"][0] - event.pos[0], player["pos"][1] - event.pos[1]).length()
+                        if distance <= player_size:
+                            dragging_player = player
+                if pygame.math.Vector2(ball_position[0] - event.pos[0], ball_position[1] - event.pos[1]).length() <= ball_radius:
+                    dragging_ball = True
+        elif event.type == pygame.MOUSEBUTTONUP:
+            if event.button == 1:
+                dragging_player = None
+                dragging_ball = False
+
+    if dragging_player:
+        if dragging_player["shape"] == "square":
+            dragging_player["rect"].center = pygame.mouse.get_pos()
+        elif dragging_player["shape"] == "triangle":
+            dragging_player["pos"] = list(pygame.mouse.get_pos())
+
+    if dragging_ball:
+        ball_position = list(pygame.mouse.get_pos())
+
+    # Dibujar la cancha
+    screen.fill(white)
+
+    # Líneas de la cancha
+    pygame.draw.rect(screen, black, (50, 50, screen_width - 100, screen_height - 100), 2)
+    pygame.draw.rect(screen, black, (50, 50, 100, screen_height - 100), 2)
+    pygame.draw.rect(screen, black, (screen_width - 150, 50, 100, screen_height - 100), 2)
+    pygame.draw.rect(screen, black, (screen_width // 2 - 2, 50, 4, screen_height - 100), 2)
+
+    # Dibujar el balón
+    pygame.draw.circle(screen, red, (int(ball_position[0]), int(ball_position[1])), ball_radius)
+
+    # Dibujar jugadores
+    for player in players:
+        if player["shape"] == "square":
+            pygame.draw.rect(screen, player["color"], player["rect"])
+        elif player["shape"] == "triangle":
+            x, y = player["pos"]
+            pygame.draw.polygon(screen, player["color"], [
+                (x, y - player_size),
+                (x - player_size / 2, y + player_size / 2),
+                (x + player_size / 2, y + player_size / 2)
+            ])
+
+    pygame.display.flip()
+
+# Salir del programa
+pygame.quit()
+sys.exit()
 
