@@ -20,6 +20,16 @@ mover flecha
                     arrow_dragging = True
 
 
+if arrow_dragging:
+                # Mantener la longitud de la flecha constante al arrastrar
+                dx = event.pos[0] - arrow_start[0]
+                dy = event.pos[1] - arrow_start[1]
+                length = max(5, min(arrow_length, (dx ** 2 + dy ** 2) ** 0.5))
+                angle = pygame.math.Vector2(dx, dy).angle_to(pygame.math.Vector2(1, 0))
+                arrow_end = (arrow_start[0] + length * pygame.math.cos(angle), arrow_start[1] + length * pygame.math.sin(angle))
+
+
+
 
 
 
