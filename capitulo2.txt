@@ -1,4 +1,8 @@
-##dimensiones cancha
+####Líneas de la cancha
+    pygame.draw.rect(screen, black, (50, 50, screen_width - 100, screen_height - 100), 2)
+    pygame.draw.rect(screen, black, (50, 50, 100, screen_height - 100), 2)
+    pygame.draw.rect(screen, black, (screen_width - 150, 50, 100, screen_height - 100), 2)
+    pygame.draw.rect(screen, black, (screen_width // 2 - 2, 50, 4, screen_height - 100), 2)##dimensiones cancha
 
 import pygame
 import sys
