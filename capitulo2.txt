@@ -1,3 +1,45 @@
+##dimensiones cancha
+
+import pygame
+import sys
+
+# Inicializar Pygame
+pygame.init()
+
+# Configuración de la pantalla
+screen_width = 800
+screen_height = 600
+screen = pygame.display.set_mode((screen_width, screen_height))
+pygame.display.set_caption("Cancha de Fútbol Sala")
+
+# Colores
+white = (255, 255, 255)
+
+# Bucle principal del juego
+running = True
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+
+    # Dibujar la cancha
+    screen.fill(white)
+
+    # Líneas de la cancha
+    pygame.draw.rect(screen, white, (50, 50, screen_width - 100, screen_height - 100), 2)
+    pygame.draw.rect(screen, white, (50, 50, 100, 200), 2)
+    pygame.draw.rect(screen, white, (screen_width - 150, 50, 100, 200), 2)
+    pygame.draw.arc(screen, white, (50, (screen_height / 2) - 50, 100, 100), 0, 3.14, 2)
+    pygame.draw.arc(screen, white, (screen_width - 150, (screen_height / 2) - 50, 100, 100), 0, 3.14, 2)
+
+    pygame.display.flip()
+
+# Salir del programa
+pygame.quit()
+sys.exit()
+
+
+##mover jugadores 
 import pygame
 import sys
 import math
