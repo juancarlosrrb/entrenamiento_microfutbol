@@ -1,4 +1,60 @@
-t閏nica
+t茅cnica
 pase
 otras cosas
-f韘ico
+f铆sico
+
+library(shiny)
+library(openxlsx)
+
+# Define la interfaz de usuario de la aplicaci贸n
+ui <- fluidPage(
+  titlePanel("Aplicaci贸n de Filtros de Excel"),
+  sidebarLayout(
+    sidebarPanel(
+      fileInput("archivo", "Selecciona un archivo Excel"),
+      selectInput("columna", "Selecciona una columna para filtrar", choices = NULL),
+      textInput("filtro", "Ingresa el filtro", value = ""),
+      actionButton("aplicar_filtro", "Aplicar Filtro"),
+      downloadButton("descargar", "Descargar Excel Filtrado")
+    ),
+    mainPanel(
+      tableOutput("tabla_filtrada")
+    )
+  )
+)
+
+# Define la l贸gica de la aplicaci贸n
+server <- function(input, output) {
+  datos <- reactive({
+    req(input$archivo)
+    datos <- read.xlsx(input$archivo$datapath, sheet = 1)
+    return(datos)
+  })
+  
+  observe({
+    updateSelectInput(session, "columna", choices = colnames(datos()))
+  })
+  
+  datos_filtrados <- eventReactive(input$aplicar_filtro, {
+    req(input$archivo, input$columna, input$filtro)
+    datos_filtrados <- datos() %>%
+      filter(.data[[input$columna]] == input$filtro)
+    return(datos_filtrados)
+  })
+  
+  output$tabla_filtrada <- renderTable({
+    datos_filtrados()
+  })
+  
+  output$descargar <- downloadHandler(
+    filename = function() {
+      paste("datos_filtrados.xlsx")
+    },
+    content = function(file) {
+      write.xlsx(datos_filtrados(), file)
+    }
+  )
+}
+
+# Ejecuta la aplicaci贸n
+shinyApp(ui = ui, server = server)
