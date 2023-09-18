@@ -1,12 +1,15 @@
-# Crear una tabla virtual
-tabla_virtual <- tbl(con, "nombre_de_tu_tabla")
+1. Calentamiento (5 minutos)
+Estiramientos
+Cardio trotar, entre otros
+Varios mixtos
 
-# Definir el tamaño del chunk (por ejemplo, 100,000 filas)
-tamano_chunk <- 100000
+2. Control
+toco y voy
+el que recibe: para, toca y va 
 
-# Recuperar los datos en chunks
-resultado <- tabla_virtual %>%
-  mutate(chunk_id = row_number() %/% tamano_chunk) %>%
-  group_by(chunk_id) %>%
-  slice(seq_len(n())) %>%
-  collect()
+3. Rondo
+2 presionan y 3 tocan 
+
+4. Salida con toque
+
+5. pegue 
