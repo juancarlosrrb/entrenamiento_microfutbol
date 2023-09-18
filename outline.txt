@@ -19,6 +19,9 @@ segundo palo
 6. disparo en movimiento
 segundo palo
 
+7. conducción
+pisando el balón 
+
 7. 1vs1 
 en la mitad poner el balón acostados el primero que llegue intenta pegar y el otro defiende
 10 segundos
@@ -26,5 +29,6 @@ en la mitad poner el balón acostados el primero que llegue intenta pegar y el o
 8. 3vs2
 arquero es el tercero va hasta la mitad
 los que defienden presionan al comienzo
+
 
 
