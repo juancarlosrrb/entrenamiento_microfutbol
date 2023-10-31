@@ -1,60 +1,18 @@
-técnica
-pase
-otras cosas
-físico
+import requests
 
-library(shiny)
-library(openxlsx)
+# Tu token de API de CircleCI
+api_token = "TU_TOKEN_DE_API"
 
-# Define la interfaz de usuario de la aplicación
-ui <- fluidPage(
-  titlePanel("Aplicación de Filtros de Excel"),
-  sidebarLayout(
-    sidebarPanel(
-      fileInput("archivo", "Selecciona un archivo Excel"),
-      selectInput("columna", "Selecciona una columna para filtrar", choices = NULL),
-      textInput("filtro", "Ingresa el filtro", value = ""),
-      actionButton("aplicar_filtro", "Aplicar Filtro"),
-      downloadButton("descargar", "Descargar Excel Filtrado")
-    ),
-    mainPanel(
-      tableOutput("tabla_filtrada")
-    )
-  )
-)
+# URL base de la API de CircleCI
+base_url = "https://circleci.com/api/v2/"
 
-# Define la lógica de la aplicación
-server <- function(input, output) {
-  datos <- reactive({
-    req(input$archivo)
-    datos <- read.xlsx(input$archivo$datapath, sheet = 1)
-    return(datos)
-  })
-  
-  observe({
-    updateSelectInput(session, "columna", choices = colnames(datos()))
-  })
-  
-  datos_filtrados <- eventReactive(input$aplicar_filtro, {
-    req(input$archivo, input$columna, input$filtro)
-    datos_filtrados <- datos() %>%
-      filter(.data[[input$columna]] == input$filtro)
-    return(datos_filtrados)
-  })
-  
-  output$tabla_filtrada <- renderTable({
-    datos_filtrados()
-  })
-  
-  output$descargar <- downloadHandler(
-    filename = function() {
-      paste("datos_filtrados.xlsx")
-    },
-    content = function(file) {
-      write.xlsx(datos_filtrados(), file)
-    }
-  )
-}
+# Realiza una solicitud GET para obtener información sobre tus proyectos
+response = requests.get(base_url + "projects", headers={"Circle-Token": api_token})
 
-# Ejecuta la aplicación
-shinyApp(ui = ui, server = server)
+# Verifica si la solicitud fue exitosa
+if response.status_code == 200:
+    data = response.json()
+    # data ahora contiene la información de tus proyectos
+    print(data)
+else:
+    print("Error al hacer la solicitud a la API de CircleCI:", response.status_code, response.text)
