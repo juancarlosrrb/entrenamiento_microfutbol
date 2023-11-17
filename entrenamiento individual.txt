@@ -1,18 +1,20 @@
-import requests
+library(jsonlite)
 
-# Tu token de API de CircleCI
-api_token = "TU_TOKEN_DE_API"
+ruta_archivo <- 'tu_archivo.json'
 
-# URL base de la API de CircleCI
-base_url = "https://circleci.com/api/v2/"
+# Abre el archivo en modo lectura
+con <- file(ruta_archivo, "r")
 
-# Realiza una solicitud GET para obtener información sobre tus proyectos
-response = requests.get(base_url + "projects", headers={"Circle-Token": api_token})
+# Inicializa un objeto vacío para almacenar los datos
+datos <- data.frame()
 
-# Verifica si la solicitud fue exitosa
-if response.status_code == 200:
-    data = response.json()
-    # data ahora contiene la información de tus proyectos
-    print(data)
-else:
-    print("Error al hacer la solicitud a la API de CircleCI:", response.status_code, response.text)
+# Lee el archivo JSON línea por línea y carga los datos incrementalmente
+while (length(linea <- readLines(con, n = 1, warn = FALSE)) > 0) {
+  json_data <- fromJSON(linea, flatten = TRUE)
+  datos <- rbind(datos, json_data)
+}
+
+# Cierra el archivo
+close(con)
+
+# Ahora 'datos' contiene la información consolidada
